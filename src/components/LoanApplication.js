@@ -6,6 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSave, faPlusSquare, faUndo, faList, faEdit} from '@fortawesome/free-solid-svg-icons';
 import MyToast from './MyToast';
 import axios from 'axios';
+import {apiURL} from '../constants'
 
 class LoanApplication extends Component {
 
@@ -39,7 +40,7 @@ class LoanApplication extends Component {
     }
 
     findLoanApplicationById = (loanApplicationId) => {
-        axios.get("/rest/loanApplication/"+loanApplicationId)
+        axios.get(apiURL + "/rest/loanApplication/"+loanApplicationId)
             .then(response => {
                 if(response.data != null) {
                     this.setState({
@@ -88,7 +89,7 @@ class LoanApplication extends Component {
         console.log("saving");
         console.log(loanApplication);
 
-        axios.post("/rest/loanApplication", loanApplication)
+        axios.post(apiURL + "/rest/loanApplication", loanApplication)
             .then(response => {
                 if(response.data != null) {
                     this.setState({"show":true, "method":"post"});
@@ -121,7 +122,7 @@ class LoanApplication extends Component {
         console.log("updating");
         console.log(loanApplication);
 
-        axios.put("/rest/loanApplication", loanApplication)
+        axios.put(apiURL + "/rest/loanApplication", loanApplication)
             .then(response => {
                 if(response.data != null) {
                     this.setState({"show":true, "method":"put"});

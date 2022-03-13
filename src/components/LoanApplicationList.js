@@ -7,6 +7,7 @@ import {faList, faEdit, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {Link} from 'react-router-dom';
 import MyToast from './MyToast';
 import axios from 'axios';
+import {apiURL} from '../constants';
 
 class LoanApplicationList extends Component {
 
@@ -26,7 +27,7 @@ class LoanApplicationList extends Component {
     }
 
     findAllLoanApplications() {
-        axios.get("/rest/loanApplication/user/" + this.props.auth.loanApplicantUser)
+        axios.get(apiURL + "/rest/loanApplication/user/" + this.props.auth.loanApplicantUser)
             .then(response => response.data)
             .then((data) => {
                 this.setState({loanApplications: data});
@@ -34,7 +35,7 @@ class LoanApplicationList extends Component {
     };
 
     deleteLoanApplication = (loanApplicationId) => {
-        axios.delete("/rest/loanApplication/"+loanApplicationId)
+        axios.delete(apiURL + "/rest/loanApplication/"+loanApplicationId)
             .then(response => {
                 if(response.data != null) {
                     this.setState({"show":true});
