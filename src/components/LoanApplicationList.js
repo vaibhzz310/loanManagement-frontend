@@ -66,11 +66,12 @@ class LoanApplicationList extends Component {
                         <tr>
                             <th>Applicant Name</th>
                             <th>Email Address</th>
-                            <th>Loan Amount</th>
+                            <th>Loan Type</th>
+                            <th>Interest Rate</th>
                             <th>Start Date</th>
                             <th>Expiry Date</th>
-                            <th>Monthly Installments</th>
-                            <th>Payback Period</th>
+                            <th>Loan Amount</th>
+                            <th>EMI</th>
                             <th>T{"&"}C</th>
                             <th>Actions</th>
                         </tr>
@@ -85,11 +86,12 @@ class LoanApplicationList extends Component {
                             <tr key={loanApplication.loanApplicationId}>
                                 <td>{loanApplication.loanApplicantName}</td>
                                 <td>{loanApplication.emailAddress}</td>
-                                <td>{loanApplication.loanAmount}</td>
+                                <td>{loanApplication.loanType}</td>
+                                <td>{loanApplication.interestRate}</td>
                                 <td>{loanApplication.loanStartDate}</td>
                                 <td>{loanApplication.loanExpiryDate}</td>
+                                <td>{loanApplication.loanAmount}</td>
                                 <td>{loanApplication.monthlyInstallment}</td>
-                                <td>{loanApplication.paybackPeriod}</td>
                                 <td>
                                     <Button 
                                     onClick={()=>{window.open("https://www.google.com/")}}

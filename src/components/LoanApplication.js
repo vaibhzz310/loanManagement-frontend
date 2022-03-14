@@ -22,7 +22,7 @@ class LoanApplication extends Component {
     initialState = {
         loanApplicationId:'', loanApplicantName:'', address:'', 
         emailAddress:'', contactNumber:'', loanAmount:'' , loanStartDate:'' , loanExpiryDate:'' ,
-        monthlyInstallment:'' , paybackPeriod:''
+        monthlyInstallment:'' , interestRate:'', loanType:''
     };
 
     componentDidMount() {
@@ -53,7 +53,8 @@ class LoanApplication extends Component {
                         loanStartDate:response.data.loanStartDate,
                         loanExpiryDate:response.data.loanExpiryDate,
                         monthlyInstallment:response.data.monthlyInstallment,
-                        paybackPeriod:response.data.paybackPeriod
+                        interestRate:response.data.interestRate,
+                        loanType:response.data.loanType,
                     });
                 }
             }).catch((error) => {
@@ -83,7 +84,8 @@ class LoanApplication extends Component {
             loanStartDate:this.state.loanStartDate,
             loanExpiryDate:this.state.loanExpiryDate,
             monthlyInstallment:this.state.monthlyInstallment,
-            paybackPeriod:this.state.paybackPeriod
+            interestRate:this.state.interestRate,
+            loanType:this.state.loanType
         };
 
         console.log("saving");
@@ -116,7 +118,8 @@ class LoanApplication extends Component {
             loanStartDate:this.state.loanStartDate,
             loanExpiryDate:this.state.loanExpiryDate,
             monthlyInstallment:this.state.monthlyInstallment,
-            paybackPeriod:this.state.paybackPeriod
+            interestRate:this.state.interestRate,
+            loanType:this.state.loanType,
         };
 
         console.log("updating");
@@ -140,6 +143,30 @@ class LoanApplication extends Component {
         this.setState({
             [event.target.name]:event.target.value
         });
+        
+        if(event.target.name === "loanType"){
+            let interest=0;
+            if(event.target.value === "Education Loan")
+                interest="6.5";
+            if(event.target.value === "Home Loan")
+                interest="7.0";
+            if(event.target.value === "Car Loan")
+                interest="7.5";
+            if(event.target.value === "Personal Loan")
+                interest="8.5";
+            this.setState({interestRate:interest});
+        }
+
+        if(event.target.name === "loanAmount"){
+            let emi =0;
+            let tenure =12;
+            let p= parseInt(event.target.value);
+            let r= parseFloat(this.state.interestRate)/100
+            let t=1;
+            emi= (p*((1+r)**t))/tenure;
+            emi= Math.floor(emi).toString();
+            this.setState({monthlyInstallment:emi});
+        }
     };
 
     loanApplicationList = () => {
@@ -149,7 +176,8 @@ class LoanApplication extends Component {
     render() {
         const {loanApplicantName, address, 
         emailAddress, contactNumber, loanAmount , loanStartDate , loanExpiryDate ,
-        monthlyInstallment , paybackPeriod} = this.state;
+        monthlyInstallment , interestRate, loanType} = this.state;
+        console.log(this.state);
 
         return (
         <div>
@@ -181,10 +209,7 @@ class LoanApplication extends Component {
                                     type="text" name="loanApplicantName"
                                     value={loanApplicantName} onChange={this.loanApplicationChange}
                                     className={"bg-dark text-white"}
-                                    placeholder="" />
-                                <Form.Control.Feedback >
-                                    Great name!.
-                                </Form.Control.Feedback>
+                                    placeholder="Name" />
                             </Form.Group>
                             <Form.Group as={Col} controlId="emailAddress">
                                 <Form.Label>Email address</Form.Label>
@@ -193,9 +218,14 @@ class LoanApplication extends Component {
                                     value={emailAddress} onChange={this.loanApplicationChange}
                                     className={"bg-dark text-white"}
                                     placeholder="name@example.com" />
-                                 <Form.Control.Feedback type="invalid">
-                                    Please provide a valid email-id.
-                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="contactNumber">
+                                <Form.Label>Contact Number</Form.Label>
+                                <Form.Control required autoComplete="off"
+                                    type="text" name="contactNumber"
+                                    value={contactNumber} onChange={this.loanApplicationChange}
+                                    className={"bg-dark text-white"}
+                                    placeholder="XXXXXXXXX" />
                             </Form.Group>
                         </Form.Row>
                             
@@ -208,28 +238,33 @@ class LoanApplication extends Component {
                                     className={"bg-dark text-white"}
                                     placeholder="Enter your permanent address" />
                             </Form.Group>
+                            
                         </Form.Row>
 
                         <Form.Row>
-                            <Form.Group as={Col} controlId="contactNumber">
-                                <Form.Label>Contact Number</Form.Label>
+                            <Form.Group as={Col} controlId="loanType">
+                                <Form.Label>Loan Type</Form.Label>
                                 <Form.Control required autoComplete="off"
-                                    type="text" name="contactNumber"
-                                    value={contactNumber} onChange={this.loanApplicationChange}
+                                    as="select" name="loanType"
+                                    value={loanType} onChange={this.loanApplicationChange}
                                     className={"bg-dark text-white"}
+                                    placeholder="Choose type of loan">
+                                        <option ></option>
+                                        <option value="Education Loan">Education Loan</option>
+                                        <option value="Home Loan">Home Loan</option>
+                                        <option value="Car Loan">Car Loan</option>
+                                        <option value="Personal Loan">Personal Loan</option>
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="interestRate">
+                                <Form.Label>Interest Rate</Form.Label>
+                                <Form.Control required autoComplete="off"
+                                    type="text" name="interestRate"
+                                    value={interestRate} onChange={this.loanApplicationChange}
+                                    className={"bg-dark text-white"} disabled
                                     placeholder="" />
                             </Form.Group>
-                            <Form.Group as={Col} controlId="loanAmount">
-                                <Form.Label>Loan Amount</Form.Label>
-                                <InputGroup>
-                                <InputGroup.Text className={"bg-dark text-white"}>₹</InputGroup.Text>
-                                <Form.Control required autoComplete="off"
-                                    type="text" name="loanAmount"
-                                    value={loanAmount} onChange={this.loanApplicationChange}
-                                    className={"bg-dark text-white"}
-                                    placeholder="" />
-                                </InputGroup>
-                            </Form.Group>                           
+                                                      
                         </Form.Row>
 
                         <Form.Row>
@@ -252,6 +287,17 @@ class LoanApplication extends Component {
                         </Form.Row>
                         
                         <Form.Row>
+                            <Form.Group as={Col} controlId="loanAmount">
+                                <Form.Label>Loan Amount</Form.Label>
+                                <InputGroup>
+                                <InputGroup.Text className={"bg-dark text-white"}>₹</InputGroup.Text>
+                                <Form.Control required autoComplete="off"
+                                    type="text" name="loanAmount"
+                                    value={loanAmount} onChange={this.loanApplicationChange}
+                                    className={"bg-dark text-white"}
+                                    placeholder="0" />
+                                </InputGroup>
+                            </Form.Group> 
                             <Form.Group as={Col} controlId="monthlyInstallment">
                                 <Form.Label>Monthly Installment</Form.Label>
                                 <InputGroup>
@@ -259,18 +305,11 @@ class LoanApplication extends Component {
                                 <Form.Control required autoComplete="off"
                                     type="text" name="monthlyInstallment"
                                     value={monthlyInstallment} onChange={this.loanApplicationChange}
-                                    className={"bg-dark text-white"}
-                                    placeholder="" />
+                                    className={"bg-dark text-white"} disabled
+                                    placeholder="0" />
                                 </InputGroup>
                             </Form.Group>
-                            <Form.Group as={Col} controlId="paybackPeriod">
-                                <Form.Label>Payback Period</Form.Label>
-                                <Form.Control required autoComplete="off"
-                                    type="text" name="paybackPeriod"
-                                    value={paybackPeriod} onChange={this.loanApplicationChange}
-                                    className={"bg-dark text-white"}
-                                    placeholder="" />
-                            </Form.Group>
+                            
                         </Form.Row>
 
                         <Form.Row>
