@@ -159,10 +159,14 @@ class LoanApplication extends Component {
 
         if(event.target.name === "loanAmount"){
             let emi =0;
-            let tenure =12;
+            const [y1,m1,d1] =this.state.loanStartDate.split("-").map((x)=>parseInt(x));
+            const [y2,m2,d2] =this.state.loanExpiryDate.split("-").map((x)=>parseInt(x));
+            let tenure= m2+(12-m1);
+            tenure+= (y2-y1-1)*12;
+            console.log(tenure);
             let p= parseInt(event.target.value);
-            let r= parseFloat(this.state.interestRate)/100
-            let t=1;
+            let r= parseFloat(this.state.interestRate)/100;
+            let t=tenure/12;
             emi= (p*((1+r)**t))/tenure;
             emi= Math.floor(emi).toString();
             this.setState({monthlyInstallment:emi});
@@ -177,7 +181,7 @@ class LoanApplication extends Component {
         const {loanApplicantName, address, 
         emailAddress, contactNumber, loanAmount , loanStartDate , loanExpiryDate ,
         monthlyInstallment , interestRate, loanType} = this.state;
-        console.log(this.state);
+        // console.log(this.state);
 
         return (
         <div>
